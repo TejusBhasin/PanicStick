@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import plistlib
+import queue
 import re
 import shutil
 import subprocess
@@ -30,6 +31,7 @@ LOG_PATH = DATA_DIR / "events.jsonl"
 SKIP_PROCESSES = {"Finder", "System Events", "Dock", "loginwindow", "WindowManager"}
 SEEN_TRIGGER_IDS = set()
 STOP = threading.Event()
+EVENTS = queue.Queue()
 
 ACTION_LABELS = {
     "quit_all_apps": "Quit all open apps (apps may ask to save unsaved work)",
@@ -455,7 +457,8 @@ def read_device(port_name, config):
                 if message.get("event") == "hello":
                     logging.info("Pico online: %s.", message.get("device", "Pico"))
                 elif message.get("event") == "trigger":
-                    handle_trigger("button hold", message, config)
+                    # Keep all confirmation dialogs on the main thread.
+                    EVENTS.put(message)
     except (serial.SerialException, OSError) as exc:
         if not STOP.is_set():
             logging.info("Serial connection %s ended: %s", port_name, exc)
@@ -476,10 +479,16 @@ def monitor(config):
         connected = set(current)
         for name in connected - known:
             logging.info("Pico connected on %s.", name)
-            handle_trigger("USB insertion", {"event_id": f"insert-{time.time_ns()}"}, config)
             threading.Thread(target=read_device, args=(name, config), daemon=True).start()
+            handle_trigger("USB insertion", {"event_id": f"insert-{time.time_ns()}"}, config)
         known = connected
-        STOP.wait(1.0)
+        while True:
+            try:
+                message = EVENTS.get_nowait()
+            except queue.Empty:
+                break
+            handle_trigger("button hold", message, config)
+        STOP.wait(0.25)
 
 
 def main():
