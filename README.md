@@ -1,81 +1,53 @@
 # PanicStick
 
-A Raspberry Pi Pico 2 (non-W) button device and macOS companion for a deliberate, physical emergency-response trigger.
+A physical button accessory for a Raspberry Pi Pico 2 (non-W) and a macOS companion.
 
-> **Safety model:** Plugging the Pico into USB never runs a response. The firmware sends a trigger only after the button on GP14 has been held for two seconds. The Mac companion's default response is a local notification and an event-log entry. It does not change network settings, quit apps, hide files or windows, or shut down the Mac.
+The Mac companion can ask before running selected actions when the Pico is plugged in. A two-second physical button hold can be enabled as an additional trigger. **Plugging in the device never silently runs an action:** the Mac displays the configured action list and requires a click on **Run**; choosing **No** cancels it. Notification-only mode is the safe default.
 
-This is an initial prototype. Test with non-critical data and a spare Mac account before relying on it.
+> Prototype warning: some choices can close apps, disconnect the Mac, or shut it down. Read the action descriptions, keep your work saved, and test with notification-only mode first.
 
-## Project layout
+## Start here
 
-- `pico/main.py` — MicroPython firmware for Raspberry Pi Pico 2.
-- `mac/panicstick.py` — macOS USB serial listener; Python 3 plus pySerial.
-- `docs/protocol.md` — newline-delimited JSON protocol.
-- `docs/testing.md` — bench and end-to-end test checklist.
-- `requirements.txt` — host dependency.
+If you are new to coding or hardware, follow the step-by-step [Beginner Install Guide](docs/install-for-beginners.md). It explains the Pico wiring, firmware setup, Mac setup, and first safe test without assuming Git knowledge.
+
+## What is included
+
+- pico/main.py: MicroPython firmware for the Pico 2.
+- mac/panicstick.py: Mac companion, setup window, USB arrival monitor, action confirmation, and event log.
+- mac/install.command and mac/uninstall.command: install or remove the per-user Mac login helper.
+- docs/protocol.md: USB serial protocol.
+- docs/testing.md: bench and end-to-end checklist.
+- docs/install-for-beginners.md: beginner setup guide.
+
+## Supported setup choices
+
+- Show a notification.
+- Quit all apps or named apps (apps may ask about unsaved work).
+- Turn off Wi-Fi.
+- Turn off Bluetooth when the optional blueutil utility is installed.
+- Turn off incoming SSH / Remote Login (macOS administrator prompt).
+- Open Sharing settings so you can turn off Screen Sharing manually.
+- Quit named virtual-machine apps. This does not stop headless VMs.
+- Run a named Shortcut from the Shortcuts app.
+- Quit Terminal.
+- Shut down the Mac.
+
+Every configured set is shown in a confirmation window for each trigger. Shutdown gets an additional confirmation and always runs last. Shortcuts run before connectivity changes or apps close, so a later step cannot prevent the Shortcut from starting. If an action fails, remaining actions are skipped. Screen Sharing and headless virtual machines require manual steps or a user-created Shortcut; PanicStick does not claim it can reliably toggle those settings itself.
 
 ## Hardware
 
 - Raspberry Pi Pico 2 (non-W)
-- Normally-open momentary pushbutton between **GP14** and **GND**
-- Optional LED on GP25 (the onboard LED, if exposed by the installed MicroPython build)
+- Normally-open momentary button between GP14 and GND
+- USB data cable
 
-The firmware enables the GPIO's internal pull-up. Do not connect the button to 3V3. No external power supply is needed when connected to USB.
+The Pico's internal pull-up is used. Do not connect the button to 3V3.
 
-## Install firmware
+## Open source and packaging
 
-1. Install a Pico 2 compatible MicroPython UF2 from the official Raspberry Pi downloads page.
-2. Hold **BOOTSEL** while connecting the Pico to USB, then copy the UF2 file to the mounted **RPI-RP2** drive. The Pico will reboot as a USB serial device.
-3. In Thonny (or another MicroPython editor), select the Pico 2 interpreter and save `pico/main.py` to the device as `main.py`.
-4. Wire the button from GP14 to GND. Open the serial REPL and confirm the device starts without errors.
+PanicStick is licensed under MIT (see [LICENSE](LICENSE)). The repository is intended to be public, but GitHub currently reports it as private. The connected GitHub tools can commit code but cannot change repository visibility; the owner needs to switch it to Public in GitHub Settings before everyone can browse or download it.
 
-At startup, the Pico announces a hello message. That message is informational only and cannot trigger a Mac action.
-
-## Install and run the macOS companion
-
-From the project directory:
-
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python mac/panicstick.py
-```
-
-The listener attempts to select a connected USB serial device whose description or USB product name contains “Pico” or “PanicStick”. If it cannot decide safely, it prints the available ports; pass one explicitly:
-
-```sh
-python mac/panicstick.py --port /dev/cu.usbmodemXXXX
-```
-
-The app prints connection and trigger events, displays a macOS notification when available, and appends JSON Lines to `~/Library/Application Support/PanicStick/events.jsonl`. Use Ctrl-C to stop it. No launch agent or background persistence is installed.
-
-## Trigger behavior
-
-1. Connect the Pico. USB insertion only produces a hello message.
-2. Hold the button for at least two seconds.
-3. The LED flashes and the Pico emits one trigger event. Releasing the button rearms it.
-4. The Mac listener checks the protocol version, event name, hold duration, and event identifier before recording the trigger.
-
-A valid trigger only creates a local notification and log entry. This is reversible and does not interrupt work.
-
-## Optional or future actions
-
-This initial release deliberately does **not** disable networking, quit applications, hide desktop items/windows, or shut down the Mac. If these actions are added later, each must be disabled by default and require a clear, per-trigger macOS confirmation. Do not configure an automatic sequence that can lock you out of the computer or interrupt unsaved work.
-
-Locking the screen is also not part of this first release. Keep your normal Mac security settings enabled.
-
-## Troubleshooting
-
-- **No serial port:** Check the USB cable supports data, reinstall Pico 2 MicroPython, and inspect the port list printed by the listener.
-- **No trigger:** Check the button is between GP14 and GND, confirm `main.py` is running, and hold the button continuously for two seconds.
-- **Listener reports invalid data:** Confirm the same protocol version is used by the firmware and host. See `docs/protocol.md`.
-- **No notification:** Event logging still works. macOS may suppress notifications for the Python terminal host; check System Settings → Notifications or watch the terminal output.
+You do not need a package or release while developing. A GitHub ZIP plus the installer is enough for early testers. For a simple public release, publish a signed and notarized macOS app or installer package; signing requires an Apple Developer ID. This repository currently provides an install script and does not yet ship a signed app.
 
 ## Development
 
-See [docs/protocol.md](docs/protocol.md) and [docs/testing.md](docs/testing.md). The host listener can be tested with a serial loopback or a USB serial emulator before connecting the button.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+See the USB [protocol](docs/protocol.md) and [test checklist](docs/testing.md). Do not enable disruptive actions until the notification-only flow works on the actual Mac.
