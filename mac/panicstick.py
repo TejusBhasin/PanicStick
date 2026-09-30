@@ -47,7 +47,7 @@ ACTION_LABELS = {
 ACTION_ORDER = {
     "notify": 0,
     "run_shortcut": 10,
-    "open_sharing_settings": 20,
+    "open_sharing_settings": 80,
     "disable_wifi": 30,
     "disable_bluetooth": 31,
     "disable_ssh": 32,
@@ -478,8 +478,6 @@ def monitor(config):
             logging.info("Pico connected on %s.", name)
             handle_trigger("USB insertion", {"event_id": f"insert-{time.time_ns()}"}, config)
             threading.Thread(target=read_device, args=(name, config), daemon=True).start()
-        if connected - known:
-            notify("PanicStick connected", "Connection processed. Check the confirmation window if actions were selected.")
         known = connected
         STOP.wait(1.0)
 
