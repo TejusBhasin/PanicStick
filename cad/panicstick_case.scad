@@ -36,8 +36,8 @@ module lid() {
       translate([0,0,base_z]) cube([case_x,case_y,lid_z]);
       // Raised square guard protects a small momentary trigger switch.
       translate([button_x-7.2,button_y-7.2,base_z+lid_z]) difference() {
-        cube([14.4,14.4,1.8]);
-        translate([2.7,2.7,-0.1]) cube([9,9,2]);
+        cube([14.4,14.4,2]);
+        translate([2.7,2.7,-0.1]) cube([9,9,2.2]);
       }
     }
     for(x=screw_x) for(y=screw_y) translate([x,y,base_z-0.1]) cylinder(h=lid_z+2.1,d=2.8);

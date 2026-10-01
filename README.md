@@ -17,9 +17,6 @@ If you are new to coding or hardware, follow the step-by-step [Beginner Install 
 - `mac/install.command` / `mac/uninstall.command`: per-user Mac login helper installer and remover.
 - `cad/panicstick_case.scad`: editable enclosure design.
 - `cad/printable/`: separate print-ready base and lid STL files.
-- `cad/fit_gauge.scad`: optional fit coupon to check printer clearance before the full case.
-- `cad/panicstick-dimensions.svg`: flat, orthographic 2D dimension drawing.
-- `docs/button-wiring.svg`: beginner wiring picture for GP14 and GND.
 - `docs/cad-printing.md`: easy print and assembly guide.
 - `docs/protocol.md`: USB protocol; `docs/testing.md`: bench and end-to-end checklist.
 

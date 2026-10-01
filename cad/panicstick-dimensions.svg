@@ -19,13 +19,13 @@
 <path d="M414 120h12M414 275h12" stroke="#334155" stroke-width="1.5"/>
 <text x="436" y="202" font-size="14">31</text>
 <text x="525" y="102" font-size="15" font-weight="700">SIDE VIEW</text>
-<rect x="525" y="195" width="186" height="43" rx="5" fill="#d8e8f7" stroke="#172033" stroke-width="3"/>
+<rect x="525" y="189" width="186" height="49" rx="5" fill="#d8e8f7" stroke="#172033" stroke-width="3"/><rect x="596" y="183" width="43" height="6" fill="#f5b7b7" stroke="#9a2626" stroke-width="2"/>
 <line x1="516" y1="258" x2="720" y2="258" stroke="#334155" stroke-width="1.5"/>
 <path d="M525 252v12M711 252v12" stroke="#334155" stroke-width="1.5"/>
 <text x="618" y="281" font-size="14" text-anchor="middle">62</text>
-<line x1="730" y1="195" x2="730" y2="238" stroke="#334155" stroke-width="1.5"/>
-<path d="M724 195h12M724 238h12" stroke="#334155" stroke-width="1.5"/>
-<text x="741" y="222" font-size="13">14.4</text>
+<line x1="730" y1="189" x2="730" y2="238" stroke="#334155" stroke-width="1.5"/>
+<path d="M724 189h12M724 238h12" stroke="#334155" stroke-width="1.5"/>
+<text x="741" y="222" font-size="13">16.4</text>
 <text x="525" y="315" font-size="12">Case excludes USB cable</text>
 <text x="34" y="355" font-size="12" fill="#475569">2D vector drawing — not a photograph or 3D render. Verify fit with the gauge before printing.</text>
 </g></svg>

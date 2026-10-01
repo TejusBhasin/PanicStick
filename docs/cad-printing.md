@@ -8,7 +8,7 @@ Files in this folder are an editable OpenSCAD model and ready-to-slice STL meshe
 - [Base STL](../cad/printable/panicstick_base.stl) — lower tray with connector opening, board rails, and screw bosses.
 - [Lid STL](../cad/printable/panicstick_lid.stl) — top plate with a guarded GP14 button opening, indicator opening, and screw holes.
 
-The enclosure measures 62 × 31 × 14.4 mm assembled. The port is Micro-USB-B; use a data-capable cable. It is not a USB-A stick and the Pico connector is not built for direct insertion into a computer's USB-A socket.
+The enclosure measures 62 × 31 × 16.4 mm assembled. The port is Micro-USB-B; use a data-capable cable. It is not a USB-A stick and the Pico connector is not built for direct insertion into a computer's USB-A socket.
 
 ## Check the fit first
 
