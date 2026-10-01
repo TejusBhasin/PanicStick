@@ -1,53 +1,49 @@
 # PanicStick
 
-A physical button accessory for a Raspberry Pi Pico 2 (non-W) and a macOS companion.
+A physical emergency-response button accessory built around a Raspberry Pi Pico 2 (non-W) and a macOS companion.
 
-The Mac companion can ask before running selected actions when the Pico is plugged in. A two-second physical button hold can be enabled as an additional trigger. **Plugging in the device never silently runs an action:** the Mac displays the configured action list and requires a click on **Run**; choosing **No** cancels it. Notification-only mode is the safe default.
+When the Pico is inserted, the Mac can show the configured action list and ask before running it. A two-second hold of the physical button is an optional second trigger. **USB insertion never silently runs actions:** the user must click **Run** in the Mac confirmation window. Notification-only is the safest first setup.
 
-> Prototype warning: some choices can close apps, disconnect the Mac, or shut it down. Read the action descriptions, keep your work saved, and test with notification-only mode first.
+> Prototype warning: some optional choices can close apps, disconnect the Mac, or shut it down. Save your work and test notification-only first.
 
 ## Start here
 
-If you are new to coding or hardware, follow the step-by-step [Beginner Install Guide](docs/install-for-beginners.md). It explains the Pico wiring, firmware setup, Mac setup, and first safe test without assuming Git knowledge.
+If you are new to coding or hardware, follow the step-by-step [Beginner Install Guide](docs/install-for-beginners.md). It includes setup, testing, and recovery steps.
 
-## What is included
+## What's included
 
-- pico/main.py: MicroPython firmware for the Pico 2.
-- mac/panicstick.py: Mac companion, setup window, USB arrival monitor, action confirmation, and event log.
-- mac/install.command and mac/uninstall.command: install or remove the per-user Mac login helper.
-- docs/protocol.md: USB serial protocol.
-- docs/testing.md: bench and end-to-end checklist.
-- docs/install-for-beginners.md: beginner setup guide.
+- `pico/main.py`: MicroPython firmware for Pico 2.
+- `mac/panicstick.py`: setup window, USB arrival monitor, confirmations, actions, and event log.
+- `mac/install.command` / `mac/uninstall.command`: per-user Mac login helper installer and remover.
+- `cad/panicstick_case.scad`: editable enclosure design.
+- `cad/printable/`: separate print-ready base and lid STL files.
+- `cad/fit_gauge.scad`: optional fit coupon to check printer clearance before the full case.
+- `cad/panicstick-dimensions.svg`: flat, orthographic 2D dimension drawing.
+- `docs/button-wiring.svg`: beginner wiring picture for GP14 and GND.
+- `docs/cad-printing.md`: easy print and assembly guide.
+- `docs/protocol.md`: USB protocol; `docs/testing.md`: bench and end-to-end checklist.
 
-## Supported setup choices
+## Actions
 
-- Show a notification.
-- Quit all apps or named apps (apps may ask about unsaved work).
-- Turn off Wi-Fi.
-- Turn off Bluetooth when the optional blueutil utility is installed.
-- Turn off incoming SSH / Remote Login (macOS administrator prompt).
-- Open Sharing settings so you can turn off Screen Sharing manually.
-- Quit named virtual-machine apps. This does not stop headless VMs.
-- Run a named Shortcut from the Shortcuts app.
-- Quit Terminal.
-- Shut down the Mac.
+The setup window lets you choose notifications, quit all apps or selected apps, Wi-Fi, Bluetooth (optional blueutil), incoming SSH/Remote Login, manual Sharing settings, named virtual-machine apps, a named Shortcuts app shortcut, Terminal, and power off.
 
-Every configured set is shown in a confirmation window for each trigger. Shutdown gets an additional confirmation and always runs last. Shortcuts run before connectivity changes or apps close, so a later step cannot prevent the Shortcut from starting. If an action fails, remaining actions are skipped. Screen Sharing and headless virtual machines require manual steps or a user-created Shortcut; PanicStick does not claim it can reliably toggle those settings itself.
+Each triggered sequence asks the user to confirm. Shortcuts run before connectivity changes or apps close. Shutdown runs last and gets its own second confirmation. Screen Sharing and headless virtual machines require manual steps or a user-authored Shortcut. If an action fails, later actions are skipped.
 
 ## Hardware
 
 - Raspberry Pi Pico 2 (non-W)
-- Normally-open momentary button between GP14 and GND
-- USB data cable
+- Normally-open momentary switch between GP14 and GND
+- USB Micro-B data cable to connect the Pico to the Mac
+- Optional printed enclosure, four M2 × 8 mm screws
 
-The Pico's internal pull-up is used. Do not connect the button to 3V3.
+Do not connect the button to 3V3. The onboard pull-up is used. The enclosure has a Micro-USB-B port opening: use a data cable, not a charge-only cable.
 
-## Open source and packaging
+## Open source and distribution
 
-PanicStick is licensed under MIT (see [LICENSE](LICENSE)), and this repository is public so anyone can browse, fork, and contribute.
+The entire project is openly available under the MIT License (see [LICENSE](LICENSE)). You can browse, download, modify, and fork the code and CAD files.
 
-You do not need a package or release while developing. A GitHub ZIP plus the installer is enough for early testers. For a simple public release, publish a signed and notarized macOS app or installer package; signing requires an Apple Developer ID. This repository currently provides an install script and does not yet ship a signed app.
+You do not need a package or release while developing or testing. A GitHub ZIP and the installer are enough for early testers. A tagged GitHub release is useful when you want to pin a stable version; a signed and notarized macOS app/package is a later convenience, not required to run the current prototype.
 
 ## Development
 
-See the USB [protocol](docs/protocol.md) and [test checklist](docs/testing.md). Do not enable disruptive actions until the notification-only flow works on the actual Mac.
+Read the [USB protocol](docs/protocol.md), [testing checklist](docs/testing.md), and [case printing guide](docs/cad-printing.md). Start with notification-only mode and confirm the full insert → review → Run/Cancel flow on your own Mac.
