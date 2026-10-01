@@ -40,7 +40,7 @@ The board's internal pull-up means no resistor is needed. A short press should d
 
 ## Part 3: get PanicStick onto the Mac
 
-After the repository is public, download the ZIP:
+Download the project ZIP from the public GitHub page:
 
 1. Open the PanicStick GitHub page.
 2. Click the green **Code** button, then **Download ZIP**.
