@@ -15,9 +15,11 @@ If you are new to coding or hardware, follow the step-by-step [Beginner Install 
 - `pico/main.py`: MicroPython firmware for Pico 2.
 - `mac/panicstick.py`: setup window, USB arrival monitor, confirmations, actions, and event log.
 - `mac/install.command` / `mac/uninstall.command`: per-user Mac login helper installer and remover.
-- `cad/panicstick_case.scad`: editable enclosure design.
-- `cad/printable/`: separate print-ready base and lid STL files.
-- `docs/cad-printing.md`: easy print and assembly guide.
+- `cad/panicstick_case.scad`: editable OpenSCAD enclosure design.
+- `cad/printable/panicstick_base.stl` and `panicstick_lid.stl`: separate print-ready parts.
+- `cad/fit_gauge.scad`: optional printer-clearance coupon.
+- `cad/panicstick-dimensions.svg`: flat 2D case drawing, with no perspective or 3D rendering.
+- `docs/cad-printing.md`: beginner printing and assembly guide; `docs/button-wiring.svg`: GP14 wiring picture.
 - `docs/protocol.md`: USB protocol; `docs/testing.md`: bench and end-to-end checklist.
 
 ## Actions
@@ -33,7 +35,7 @@ Each triggered sequence asks the user to confirm. Shortcuts run before connectiv
 - USB Micro-B data cable to connect the Pico to the Mac
 - Optional printed enclosure, four M2 × 8 mm screws
 
-Do not connect the button to 3V3. The onboard pull-up is used. The enclosure has a Micro-USB-B port opening: use a data cable, not a charge-only cable.
+Do not connect the button to 3V3. The onboard pull-up is used. The enclosure is nominally 62 × 31 × 16.4 mm including the raised button guard. Its opening fits the Pico's Micro-USB-B connector; use a data-capable cable, not a charge-only cable. See the [flat 2D dimension drawing](cad/panicstick-dimensions.svg) and [print guide](docs/cad-printing.md).
 
 ## Open source and distribution
 
