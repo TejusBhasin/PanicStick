@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="320" viewBox="0 0 700 320" role="img" aria-labelledby="t d">
+<title id="t">PanicStick physical button wiring</title><desc id="d">A normally open momentary button connects Pico 2 GP14 to GND, with no external resistor and no connection to 3V3.</desc>
+<rect width="700" height="320" fill="#f7f8fa"/>
+<g font-family="Arial,sans-serif" fill="#172033">
+<text x="35" y="42" font-size="22" font-weight="700">BUTTON WIRING — PICO 2 (NON-W)</text>
+<rect x="70" y="90" width="210" height="150" rx="14" fill="#d8e8f7" stroke="#172033" stroke-width="3"/>
+<text x="175" y="122" font-size="18" font-weight="700" text-anchor="middle">Pico 2</text>
+<circle cx="280" cy="160" r="6" fill="#14532d"/>
+<circle cx="280" cy="210" r="6" fill="#14532d"/>
+<text x="267" y="165" font-size="14" text-anchor="end">GP14</text>
+<text x="267" y="215" font-size="14" text-anchor="end">GND</text>
+<path d="M286 160 H390 V137 H458" fill="none" stroke="#bd2525" stroke-width="4"/>
+<path d="M286 210 H390 V220 H458" fill="none" stroke="#1d4ed8" stroke-width="4"/>
+<rect x="458" y="120" width="120" height="118" rx="18" fill="#fff" stroke="#172033" stroke-width="3"/>
+<rect x="497" y="143" width="42" height="30" rx="8" fill="#f5b7b7" stroke="#9a2626" stroke-width="2"/>
+<line x1="497" y1="173" x2="478" y2="198" stroke="#172033" stroke-width="3"/>
+<line x1="539" y1="173" x2="558" y2="198" stroke="#172033" stroke-width="3"/>
+<text x="518" y="265" font-size="14" text-anchor="middle">normally-open pushbutton</text>
+<text x="70" y="285" font-size="14" fill="#334155">One switch contact → GP14. Other switch contact → any GND pin. No 3V3 connection.</text>
+<text x="70" y="305" font-size="12" fill="#475569">The firmware enables Pico's internal pull-up. Unplug USB before wiring.</text>
+</g></svg>
