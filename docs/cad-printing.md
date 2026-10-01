@@ -18,7 +18,7 @@ The enclosure measures 62 × 31 × 14.4 mm assembled. The port is Micro-USB-B; u
 4. Start with 0.2 mm layers, 2–3 walls, and 15–25% infill in PLA or PETG. Supports are not needed.
 5. Before inserting electronics, check that the Pico board sits on the rails and the Micro-USB-B plug passes through the opening. Printer calibration and material shrinkage vary; adjust the OpenSCAD `fit_clearance`/dimensions or lightly file the port if needed.
 
-## Assembly and wiring\n\nSee the [GP14 button wiring diagram](button-wiring.svg) before soldering or attaching jumper wires.
+## Assembly and wiring
 
 - Wire a normally-open momentary switch between **GP14** and **GND**. The Pico firmware uses its internal pull-up; do not connect the switch to 3V3.
 - Place the switch so its actuator sits under the guarded square opening. The opening is 9 mm square; resize `button_aperture` to suit another switch.
