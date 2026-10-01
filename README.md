@@ -44,7 +44,7 @@ The Pico's internal pull-up is used. Do not connect the button to 3V3.
 
 ## Open source and packaging
 
-PanicStick is licensed under MIT (see [LICENSE](LICENSE)). The repository is intended to be public, but GitHub currently reports it as private. The connected GitHub tools can commit code but cannot change repository visibility; the owner needs to switch it to Public in GitHub Settings before everyone can browse or download it.
+PanicStick is licensed under MIT (see [LICENSE](LICENSE)), and this repository is public so anyone can browse, fork, and contribute.
 
 You do not need a package or release while developing. A GitHub ZIP plus the installer is enough for early testers. For a simple public release, publish a signed and notarized macOS app or installer package; signing requires an Apple Developer ID. This repository currently provides an install script and does not yet ship a signed app.
 
