@@ -4,6 +4,7 @@ part = "base";
 $fn = 48;
 
 case_x=62; case_y=31; base_z=12.4; wall=2; floor=2; lid_z=2;
+board_width=21; board_clearance=0.4; rail_width=1.1;
 usb_width=10; usb_height=5.5; usb_y=case_y/2; usb_z=5.8;
 button_x=39; button_y=case_y/2; button_aperture=9;
 led_x=49.5; led_y=case_y/2; led_d=3.4;
@@ -24,8 +25,8 @@ module base() {
       translate([-0.1,usb_y-usb_width/2,usb_z-usb_height/2]) cube([wall+0.2,usb_width,usb_height]);
     }
     // Low edge rails support the 51 x 21 mm board while leaving pads clear.
-    translate([4,3,floor]) cube([54,1.1,1.6]);
-    translate([4,26.9,floor]) cube([54,1.1,1.6]);
+    translate([4,(case_y-board_width)/2-board_clearance-rail_width,floor]) cube([54,rail_width,1.6]);
+    translate([4,(case_y+board_width)/2+board_clearance,floor]) cube([54,rail_width,1.6]);
     for(x=screw_x) for(y=screw_y) boss(x,y);
   }
 }
