@@ -104,6 +104,36 @@ def ordered_actions(actions, order):
     return sorted(actions, key=lambda item: order.get(item["id"], 999))
 
 
+def preview_workflow(config, labels, order):
+    """Describe the configured plan without executing any system action."""
+    mode = config.get("confirmation_mode", "before_run")
+    lines = [
+        "PanicStick workflow preview (read-only)",
+        "Confirmation: " + ("ask before each run" if mode == "before_run" else "unattended"),
+    ]
+    triggers = []
+    if config.get("on_insertion"):
+        triggers.append("USB insertion")
+    if config.get("on_button_hold"):
+        triggers.append("two-second button hold")
+    lines.append("Triggers: " + (", ".join(triggers) if triggers else "none enabled"))
+    lines.append("Actions:")
+    for number, action in enumerate(ordered_actions(config["actions"], order), 1):
+        action_id = action["id"]
+        label = labels.get(action_id, action_id)
+        if action_id == "run_shortcut" and config.get("shortcut_name"):
+            label += ": " + config["shortcut_name"]
+        elif action_id == "quit_selected_apps" and config.get("selected_apps"):
+            label += ": " + ", ".join(config["selected_apps"])
+        elif action_id == "quit_vm_apps" and config.get("vm_apps"):
+            label += ": " + ", ".join(config["vm_apps"])
+        lines.append(f"  {number}. {label}")
+        if action_id in config.get("confirm_before", []):
+            lines.append("     Confirmation checkpoint immediately before this step")
+    lines.append("Preview only: no actions were run.")
+    return "\n".join(lines)
+
+
 class EventIdCache:
     """Bounded insertion-ordered de-duplication cache for serial trigger IDs."""
 

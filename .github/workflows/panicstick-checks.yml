@@ -7,6 +7,8 @@ on:
       - "pico/**"
       - "tests/**"
       - "requirements.txt"
+      - "README.md"
+      - "docs/**"
       - ".github/workflows/panicstick-checks.yml"
   pull_request:
     paths:
@@ -14,6 +16,8 @@ on:
       - "pico/**"
       - "tests/**"
       - "requirements.txt"
+      - "README.md"
+      - "docs/**"
       - ".github/workflows/panicstick-checks.yml"
   workflow_dispatch:
 

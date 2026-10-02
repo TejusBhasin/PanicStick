@@ -2,7 +2,7 @@
 
 **A button for starting a Mac emergency-response routine you chose.**
 
-PanicStick pairs a Raspberry Pi Pico 2 (the non-W model) with a small Mac app. You can ask the app to show a review screen when the Pico is plugged in, or trigger it by holding the physical button for two seconds.
+PanicStick pairs a Raspberry Pi Pico 2 (the non-W model) with a small Mac app. You can ask the app to show a review screen when the Pico is plugged in, or trigger it by holding the physical button for two seconds. Setup controls whether each enabled trigger asks first or runs unattended.
 
 ![Bare Pico 2 board with a separate PanicStick button](docs/images/pico2-and-button.svg)
 
@@ -10,7 +10,9 @@ PanicStick pairs a Raspberry Pi Pico 2 (the non-W model) with a small Mac app. Y
 
 ## Start here
 
-New to coding or electronics? Follow the [step-by-step beginner guide](docs/install-for-beginners.md). You can test PanicStick on your desk without printing the case.\n\n![Four-step PanicStick setup guide](docs/images/setup-flow.svg)
+New to coding or electronics? Follow the [step-by-step beginner guide](docs/install-for-beginners.md). You can test PanicStick on your desk without printing the case.
+
+![Four-step PanicStick setup guide](docs/images/setup-flow.svg)
 
 ## How it works
 
@@ -49,7 +51,7 @@ See the [wiring diagram](docs/button-wiring.svg), [case dimensions](cad/panicsti
 - `docs/testing.md`: hardware and Mac test checklist.
 - `tests/`: automated protocol, settings, action-order, button, and artwork checks.
 
-Read the [confirmation and takeover warning](docs/confirmation-and-security.md). The [image bundle](docs/images/PanicStick-diagrams.zip) contains both original and new diagrams. See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
+Read the [confirmation and takeover warning](docs/confirmation-and-security.md). The [image bundle](docs/images/PanicStick-diagrams.zip) contains both original and new diagrams. See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check, `panicstick.py --preview` to inspect the saved action order and checkpoints without running them, or `panicstick.py --show-log` to view the latest local event records.
 
 ## Open source
 

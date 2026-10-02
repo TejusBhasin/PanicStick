@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PanicStick macOS companion. Plug-in and button actions always require review."""
+"""PanicStick macOS companion for configured USB and button triggers."""
 import argparse
 import json
 import logging
@@ -14,7 +14,9 @@ import threading
 import time
 from pathlib import Path
 
-from panicstick_core import EventIdCache, normalize_config, ordered_actions, validate_message
+from panicstick_core import (
+    EventIdCache, normalize_config, ordered_actions, preview_workflow, validate_message,
+)
 
 try:
     import serial
@@ -145,7 +147,7 @@ def setup_wizard():
     heading.grid(row=0, column=0, sticky="ew", padx=24, pady=(22, 6))
     tk.Label(
         root,
-        text=("Choose confirmation before each run or unattended mode with optional checkpoints. "
+        text=("Choose review before each run or unattended mode with optional checkpoints. "
               "If someone takes over the Mac, a prompt may be blocked and you may not be able to confirm. "
               "USB insertion triggers actions only when explicitly enabled."),
         justify="left", wraplength=650, anchor="w",
@@ -153,9 +155,9 @@ def setup_wizard():
 
     insertion = tk.BooleanVar(value=bool(config.get("on_insertion", True)))
     button = tk.BooleanVar(value=bool(config.get("on_button_hold", False)))
-    tk.Checkbutton(root, text="Ask me to run these actions when I plug in the Pico",
+    tk.Checkbutton(root, text="Start the workflow when I plug in the Pico",
                    variable=insertion).grid(row=2, column=0, sticky="w", padx=24)
-    tk.Checkbutton(root, text="Also ask when I hold the physical button for 2 seconds",
+    tk.Checkbutton(root, text="Also start when I hold the physical button for 2 seconds",
                    variable=button).grid(row=3, column=0, sticky="w", padx=24, pady=(0, 12))
 
     mode = tk.StringVar(value=config.get("confirmation_mode", "before_run"))
@@ -300,7 +302,7 @@ def ask_action_checkpoint(action, config):
         root.withdraw()
         root.attributes("-topmost", True)
         ok = messagebox.askyesno("PanicStick checkpoint",
-            f"Continue with this step?\\n\\n{action_prompt_line(action, config)}\\n\\nChoose No to stop later actions.",
+            f"Continue with this step?\n\n{action_prompt_line(action, config)}\n\nChoose No to stop later actions.",
             default=messagebox.NO, parent=root)
         root.destroy()
         return ok
@@ -470,7 +472,7 @@ def pico_ports():
         if any(word in description for word in ("pico", "panicstick", "rp2", "micropython")):
             found[port.device] = port
         elif getattr(port, "vid", None) == 0x2E8A:
-            # Raspberry Pi USB vendor; still require a per-run user confirmation before actions.
+            # Raspberry Pi USB vendor; configured review mode/checkpoints govern actions.
             found[port.device] = port
     return found
 
@@ -512,7 +514,13 @@ def monitor(config):
     if known:
         logging.info("Pico already connected at startup; no insertion action will run. Unplug and reconnect to trigger it.")
     else:
-        logging.info("Waiting for a Pico. USB insertion will ask before running configured actions.")
+        if config.get("on_insertion", True):
+            insertion_message = ("USB insertion will run configured actions without a start prompt."
+                                 if config.get("confirmation_mode") == "unattended"
+                                 else "USB insertion will request review before configured actions.")
+            logging.info("Waiting for a Pico. %s", insertion_message)
+        else:
+            logging.info("Waiting for a Pico. USB insertion is disabled as a trigger.")
 
     while not STOP.is_set():
         current = pico_ports()
@@ -576,6 +584,7 @@ def main():
     parser.add_argument("--setup", action="store_true", help="open the visual setup screen")
     parser.add_argument("--doctor", action="store_true", help="check setup readiness without running actions")
     parser.add_argument("--show-log", action="store_true", help="show the latest 20 local event-log entries")
+    parser.add_argument("--preview", action="store_true", help="print the saved workflow without running actions")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     ensure_private_data_dir()
@@ -583,6 +592,9 @@ def main():
         return doctor()
     if args.show_log:
         show_recent_log()
+        return 0
+    if args.preview:
+        print(preview_workflow(load_config(), ACTION_LABELS, ACTION_ORDER))
         return 0
     if args.setup:
         try:

@@ -43,3 +43,8 @@ Do not test shutdown, Wi-Fi, Bluetooth, or app quitting while important work is 
 ## Protocol validation
 
 The listener rejects wrong protocol names/versions, unknown events, triggers shorter than two seconds, malformed JSON, overlong lines, and invalid event IDs. Test with a serial emulator or loopback before connecting a button.
+
+
+## Read-only preview
+
+After saving settings, run `panicstick.py --preview` to print the enabled triggers, confirmation mode, action order, and checkpoints. This command does not connect to the Pico or execute any action.
