@@ -2,7 +2,7 @@
 
 Choose only the steps you understand. The first run should use **Show a PanicStick notification** by itself.
 
-When the Pico arrives or the button is held, the Mac shows an action review. Nothing in the list runs until you choose **Run**. **Cancel** records the cancellation and does not run the sequence.
+By default, the Mac reviews the action list before every run. In setup you can choose unattended mode. In that mode, selected checkpoints pause immediately before their actions; declining stops the remaining sequence. If the Mac is taken over, a prompt could be blocked or manipulated and you may not be able to choose Confirm.
 
 ## Actions in the setup window
 
@@ -20,8 +20,12 @@ When the Pico arrives or the button is held, the Mac shows an action review. Not
 | Quit Terminal | Asks Terminal to quit near the end of the sequence. | PanicStick keeps running as a separate login helper. |
 | Shut down the Mac | Asks once more immediately before requesting shutdown. | Shutdown is always last. No later PanicStick step can run after it. |
 
+## Confirmation checkpoints
+
+Pick any selected action in setup to insert a confirmation immediately before it. Checkpoints follow the action order. Shutdown is last and has a checkpoint selected by default when enabled. Removing it allows power-off to run without another prompt. Earlier actions cannot be rolled back when a later checkpoint is declined.
+
 ## Order and failures
 
 PanicStick runs a selected Shortcut first, then connectivity changes, then selected app actions, then Terminal, and finally shutdown. If any step fails, the remaining steps are skipped. PanicStick cannot roll back a change that already completed; for example, switch Wi-Fi back on yourself if a later app step fails.
 
-A canceled action review runs no actions. A canceled shutdown confirmation leaves the Mac on, after the earlier selected steps have completed.
+Declining the initial review runs no actions. Declining a checkpoint stops all later actions; completed actions remain completed.

@@ -14,7 +14,7 @@ New to coding or electronics? Follow the [step-by-step beginner guide](docs/inst
 
 ## How it works
 
-The Pico sends a small JSON message over USB. The Mac app checks it, shows you the actions you selected, and waits for you to choose **Run** or **Cancel**. Plugging in the Pico never runs actions silently.
+The Pico sends a small JSON message over USB. The Mac app checks the message and follows your setup choice: review every run, or unattended mode with optional confirmation checkpoints before selected actions. USB insertion starts the workflow only if you enabled that trigger.
 
 ![Labeled PanicStick response flow](docs/images/response-flow.svg)
 
@@ -45,7 +45,7 @@ See the [wiring diagram](docs/button-wiring.svg), [case dimensions](cad/panicsti
 - `docs/testing.md`: hardware and Mac test checklist.
 - `tests/`: automated protocol, settings, action-order, button, and artwork checks.
 
-See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
+Read the [confirmation and takeover warning](docs/confirmation-and-security.md). See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
 
 ## Open source
 

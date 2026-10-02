@@ -71,6 +71,20 @@ def normalize_config(config, defaults, allowed_actions):
             seen.add(action_id)
     clean = copy.deepcopy(defaults)
     clean["actions"] = clean_actions
+    mode = config.get("confirmation_mode", defaults.get("confirmation_mode", "before_run"))
+    if mode not in ("before_run", "unattended"):
+        raise ValueError("confirmation_mode must be before_run or unattended")
+    clean["confirmation_mode"] = mode
+    checkpoints = config.get("confirm_before", defaults.get("confirm_before", []))
+    if not isinstance(checkpoints, list) or len(checkpoints) > len(allowed_actions):
+        raise ValueError("confirm_before must be a list of action IDs")
+    selected_ids = {item["id"] for item in clean_actions}
+    clean["confirm_before"] = []
+    for checkpoint in checkpoints:
+        if not isinstance(checkpoint, str) or checkpoint not in allowed_actions:
+            raise ValueError("confirm_before includes an unsupported action")
+        if checkpoint in selected_ids and checkpoint not in clean["confirm_before"]:
+            clean["confirm_before"].append(checkpoint)
     for key in ("on_insertion", "on_button_hold"):
         value = config.get(key, defaults[key])
         if not isinstance(value, bool):

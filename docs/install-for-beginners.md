@@ -45,7 +45,7 @@ Unplug the Pico before wiring.
 4. Install Python 3 from [python.org](https://www.python.org/downloads/macos/) if needed. The Mac installer needs a Python 3 build that includes Tk.
 5. Open the downloaded folder, then the `mac` folder. Double-click **install.command**.
 6. A Terminal window opens during setup. The installer prepares a private Python environment, installs pySerial, and opens the setup window. Keep the Mac online for this step.
-7. In setup, leave **Show a PanicStick notification** selected for your first test. Choose whether USB insertion should ask to run actions. Add other actions only after reading their descriptions.
+7. Keep **Ask before each run** for your first test and select notification only. You can later choose unattended mode and select checkpoints immediately before chosen actions. A shutdown checkpoint is selected by default when power-off is enabled.
 8. Click **Save settings**. The helper starts when you sign in to your Mac. Keep the installer window open until it reports completion.
 
 If macOS blocks the installer, Control-click `install.command`, choose **Open**, then choose **Open** again. Only do this for a copy from the official repository that you have reviewed.
@@ -60,7 +60,7 @@ If macOS blocks the installer, Control-click `install.command`, choose **Open**,
 4. Plug it in again and choose **Run**. You should see the notification and a new event line in `~/Library/Application Support/PanicStick/events.jsonl`.
 5. Try the two-second physical hold only if you enabled that trigger.
 
-The Mac asks for confirmation every time. Insertion by itself does not run the action list.
+By default the Mac asks before each run. Unattended mode skips that start prompt, but your selected checkpoints still pause before the chosen actions. If the Mac is taken over, you may not be able to select Confirm.
 
 ## Optional: print the case
 
@@ -84,6 +84,6 @@ To remove the login helper, reopen the downloaded folder and double-click `mac/u
 - **Virtual machines:** quits named VM apps. It cannot guarantee a background/headless VM has stopped.
 - **Shortcuts:** runs the named Shortcut. Inspect it first because Shortcuts can perform their own actions.
 - **Terminal:** asks Terminal to quit near the end. PanicStick runs independently as a login helper.
-- **Power off:** asks for an extra confirmation and runs last. Nothing runs after shutdown is requested.
+- **Power off:** runs last. Its confirmation checkpoint is selected by default and can be removed in setup. Nothing runs after shutdown is requested.
 
 If any action fails, the remaining action sequence stops. Canceling the confirmation runs nothing.

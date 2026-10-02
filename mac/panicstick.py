@@ -63,6 +63,8 @@ ACTION_ORDER = {
 }
 DEFAULT_CONFIG = {
     "version": 1,
+    "confirmation_mode": "before_run",
+    "confirm_before": ["power_off"],
     "on_insertion": True,
     "on_button_hold": False,
     "actions": [{"id": "notify"}],
@@ -134,8 +136,8 @@ def setup_wizard():
     config = load_config()
     root = tk.Tk()
     root.title("PanicStick setup")
-    root.geometry("700x760")
-    root.minsize(620, 640)
+    root.geometry("760x900")
+    root.minsize(680, 760)
     root.columnconfigure(0, weight=1)
 
     heading = tk.Label(root, text="Choose what PanicStick should do",
@@ -143,8 +145,9 @@ def setup_wizard():
     heading.grid(row=0, column=0, sticky="ew", padx=24, pady=(22, 6))
     tk.Label(
         root,
-        text=("Plugging in the Pico will show a confirmation before these actions run. "
-              "Cancel is always available. The two-second button trigger is optional."),
+        text=("Choose confirmation before each run or unattended mode with optional checkpoints. "
+              "If someone takes over the Mac, a prompt may be blocked and you may not be able to confirm. "
+              "USB insertion triggers actions only when explicitly enabled."),
         justify="left", wraplength=650, anchor="w",
     ).grid(row=1, column=0, sticky="ew", padx=24, pady=(0, 14))
 
@@ -155,9 +158,17 @@ def setup_wizard():
     tk.Checkbutton(root, text="Also ask when I hold the physical button for 2 seconds",
                    variable=button).grid(row=3, column=0, sticky="w", padx=24, pady=(0, 12))
 
+    mode = tk.StringVar(value=config.get("confirmation_mode", "before_run"))
+    tk.Label(root, text="Confirmation mode:", anchor="w").grid(row=4, column=0, sticky="w", padx=24)
+    tk.Radiobutton(root, text="Ask before each run (recommended)", variable=mode, value="before_run").grid(row=5, column=0, sticky="w", padx=24)
+    tk.Radiobutton(root, text="Run without a start prompt (unattended)", variable=mode, value="unattended").grid(row=6, column=0, sticky="w", padx=24)
+    tk.Label(root, text="Optional checkpoints: ask immediately before selected actions", anchor="w").grid(row=7, column=0, sticky="w", padx=24)
+    checkpoints = tk.Listbox(root, selectmode="multiple", height=4, exportselection=False)
+    checkpoints.grid(row=8, column=0, sticky="ew", padx=24)
     defaults = {item.get("id") for item in config.get("actions", [])}
     choices = {}
-    row = 4
+    row = 9
+    checkpoint_ids = []
     for action_id, label in ACTION_LABELS.items():
         var = tk.BooleanVar(value=action_id in defaults)
         choices[action_id] = var
@@ -165,6 +176,10 @@ def setup_wizard():
             row=row, column=0, sticky="w", padx=24, pady=1
         )
         row += 1
+        checkpoint_ids.append(action_id)
+        checkpoints.insert("end", f"Confirm before: {label}")
+        if action_id in config.get("confirm_before", []):
+            checkpoints.selection_set(len(checkpoint_ids) - 1)
 
     tk.Label(root, text="App names for the two app choices (comma-separated; for example Safari, Mail):",
              anchor="w", wraplength=650).grid(row=row, column=0, sticky="ew", padx=24, pady=(12, 2))
@@ -202,6 +217,8 @@ def setup_wizard():
             messagebox.showerror("Choose an action", "Select at least one action.", parent=root)
             return
         config.update({
+            "confirmation_mode": mode.get(),
+            "confirm_before": [checkpoint_ids[index] for index in checkpoints.curselection()],
             "on_insertion": insertion.get(),
             "on_button_hold": button.get(),
             "actions": actions,
@@ -262,6 +279,23 @@ def ask_to_run(source, config):
         return ok
     except Exception as exc:
         logging.error("Could not show the confirmation window; actions cancelled: %s", exc)
+        return False
+
+
+def ask_action_checkpoint(action, config):
+    try:
+        import tkinter as tk
+        from tkinter import messagebox
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        ok = messagebox.askyesno("PanicStick checkpoint",
+            f"Continue with this step?\\n\\n{action_prompt_line(action, config)}\\n\\nChoose No to stop later actions.",
+            default=messagebox.NO, parent=root)
+        root.destroy()
+        return ok
+    except Exception as exc:
+        logging.error("Could not show the checkpoint; later actions cancelled: %s", exc)
         return False
 
 
@@ -370,24 +404,7 @@ def execute_action(action, config):
     elif action_id == "quit_terminal":
         quit_app("Terminal")
     elif action_id == "power_off":
-        try:
-            import tkinter as tk
-            from tkinter import messagebox
-            root = tk.Tk()
-            root.withdraw()
-            root.attributes("-topmost", True)
-            approved = messagebox.askyesno(
-                "Confirm Mac shutdown",
-                "This will shut down your Mac. The remaining actions are complete. Shut down now?",
-                default=messagebox.NO, parent=root,
-            )
-            root.destroy()
-        except Exception as exc:
-            raise RuntimeError(f"Could not show shutdown confirmation; Mac was not shut down: {exc}")
-        if approved:
-            run_osascript('tell application "System Events" to shut down', timeout=60)
-        else:
-            logging.info("User cancelled the final shutdown confirmation.")
+        run_osascript('tell application "System Events" to shut down', timeout=60)
     else:
         raise RuntimeError(f"Unsupported action: {action_id}")
 
@@ -402,7 +419,7 @@ def handle_trigger(source, message, config):
         logging.info("Ignored a duplicate trigger event.")
         return
 
-    if not ask_to_run(source, config):
+    if config.get("confirmation_mode", "before_run") == "before_run" and not ask_to_run(source, config):
         append_event({"timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                       "event": "cancelled", "source": source, "event_id": event_id})
         logging.info("%s action run cancelled by user.", source)
@@ -420,6 +437,12 @@ def handle_trigger(source, message, config):
 
     ordered = ordered_actions(config["actions"], ACTION_ORDER)
     for action in ordered:
+        if action["id"] in config.get("confirm_before", []):
+            if not ask_action_checkpoint(action, config):
+                append_event({"timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                              "event": "checkpoint_cancelled", "source": source,
+                              "event_id": event_id, "before_action": action["id"]})
+                break
         try:
             execute_action(action, config)
             logging.info("Completed action: %s", action["id"])
