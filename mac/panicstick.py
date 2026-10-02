@@ -498,12 +498,59 @@ def monitor(config):
         STOP.wait(0.25)
 
 
+def doctor():
+    """Print a read-only readiness check; never starts or runs an action."""
+    try:
+        import tkinter  # noqa: F401
+        has_tk = True
+    except ImportError:
+        has_tk = False
+
+    required = [
+        ("macOS", sys.platform == "darwin"),
+        ("Python 3.9 or newer", sys.version_info >= (3, 9)),
+        ("Tk setup window", has_tk),
+        ("pySerial", serial is not None),
+    ]
+    optional = [
+        ("Pico connected", bool(pico_ports())),
+        ("Shortcuts command", bool(shutil.which("shortcuts"))),
+        ("blueutil for Bluetooth action", bool(shutil.which("blueutil"))),
+    ]
+    for label, ready in required:
+        print(f"{"OK" if ready else "MISSING"}  {label}")
+    for label, ready in optional:
+        print(f"{"OK" if ready else "OPTIONAL"}  {label}")
+    return 0 if all(ready for _, ready in required) else 1
+
+
+def show_recent_log(limit=20):
+    """Print a small tail of the local event log without changing it."""
+    if not LOG_PATH.is_file():
+        print("No PanicStick events have been logged yet.")
+        return
+    try:
+        with LOG_PATH.open(encoding="utf-8") as stream:
+            lines = stream.readlines()
+    except OSError as exc:
+        print(f"Could not read the PanicStick log: {exc}", file=sys.stderr)
+        return
+    print("".join(lines[-limit:]), end="")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--setup", action="store_true", help="open the visual setup screen")
+    parser.add_argument("--doctor", action="store_true", help="check setup readiness without running actions")
+    parser.add_argument("--show-log", action="store_true", help="show the latest 20 local event-log entries")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     ensure_private_data_dir()
+    if args.doctor:
+        return doctor()
+    if args.show_log:
+        show_recent_log()
+        return 0
     if args.setup:
         try:
             setup_wizard()
