@@ -24,6 +24,8 @@ See the [unattended response flow](docs/images/response-flow-unattended.svg), [u
 
 The [checkpoint placement guide](docs/images/checkpoint-placement-guide.svg) and [mode decision diagram](docs/images/confirmation-mode-decision.svg) explain where pauses fit and when unattended mode is useful.
 
+Four more project diagrams: [architecture](docs/images/challenge-architecture.svg), [button wiring](docs/images/challenge-button-wiring.svg), [read-only preview](docs/images/challenge-preview-mode.svg), and [action flow](docs/images/challenge-action-flow.svg).
+
 The Mac runs the Shortcut before connectivity and app actions, and shutdown last. You can place confirmation checkpoints before selected actions; the shutdown checkpoint starts selected when shutdown is enabled. If an action fails, the rest of the sequence stops. Events are recorded on your Mac.
 
 ## What you can choose
