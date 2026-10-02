@@ -15,7 +15,9 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 mkdir -p "$APP_DIR" "$HOME/Library/LaunchAgents" "$DATA_DIR"
+chmod 700 "$DATA_DIR"
 cp "$ROOT_DIR/mac/panicstick.py" "$APP_DIR/panicstick.py"
+cp "$ROOT_DIR/mac/panicstick_core.py" "$APP_DIR/panicstick_core.py"
 cp "$ROOT_DIR/requirements.txt" "$APP_DIR/requirements.txt"
 
 if [ ! -x "$APP_DIR/.venv/bin/python" ]; then
