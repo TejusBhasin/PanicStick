@@ -14,6 +14,8 @@ import threading
 import time
 from pathlib import Path
 
+from panicstick_core import EventIdCache, normalize_config, ordered_actions, validate_message
+
 try:
     import serial
     from serial.tools import list_ports
@@ -29,7 +31,7 @@ DATA_DIR = Path.home() / "Library" / "Application Support" / "PanicStick"
 CONFIG_PATH = DATA_DIR / "config.json"
 LOG_PATH = DATA_DIR / "events.jsonl"
 SKIP_PROCESSES = {"Finder", "System Events", "Dock", "loginwindow", "WindowManager"}
-SEEN_TRIGGER_IDS = set()
+SEEN_TRIGGER_IDS = EventIdCache(512)
 STOP = threading.Event()
 EVENTS = queue.Queue()
 
@@ -83,32 +85,39 @@ def notify(title, message):
         print(f"{title}: {message}")
 
 
+def ensure_private_data_dir():
+    DATA_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    try:
+        os.chmod(DATA_DIR, 0o700)
+    except OSError as exc:
+        logging.warning("Could not restrict settings-folder permissions: %s", exc)
+
+
 def append_event(event):
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_private_data_dir()
     with LOG_PATH.open("a", encoding="utf-8") as stream:
+        os.chmod(LOG_PATH, 0o600)
         stream.write(json.dumps(event, sort_keys=True) + "\n")
 
 
 def load_config():
     if not CONFIG_PATH.exists():
-        return dict(DEFAULT_CONFIG)
+        return normalize_config(DEFAULT_CONFIG, DEFAULT_CONFIG, ACTION_LABELS)
     try:
         with CONFIG_PATH.open(encoding="utf-8") as stream:
             config = json.load(stream)
-        if config.get("version") != 1 or not isinstance(config.get("actions"), list):
-            raise ValueError("unsupported config version")
-        result = dict(DEFAULT_CONFIG)
-        result.update(config)
-        return result
+        return normalize_config(config, DEFAULT_CONFIG, ACTION_LABELS)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         logging.error("Could not read setup settings (%s). Keeping safe notification-only defaults.", exc)
-        return dict(DEFAULT_CONFIG)
+        return normalize_config(DEFAULT_CONFIG, DEFAULT_CONFIG, ACTION_LABELS)
 
 
 def save_config(config):
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_private_data_dir()
+    config = normalize_config(config, DEFAULT_CONFIG, ACTION_LABELS)
     temporary = CONFIG_PATH.with_suffix(".tmp")
     with temporary.open("w", encoding="utf-8") as stream:
+        os.chmod(temporary, 0o600)
         json.dump(config, stream, indent=2)
         stream.write("\n")
     temporary.replace(CONFIG_PATH)
@@ -200,6 +209,11 @@ def setup_wizard():
             "vm_apps": [s.strip() for s in vm_entry.get().split(",") if s.strip()],
             "shortcut_name": shortcut_entry.get().strip(),
         })
+        try:
+            config = normalize_config(config, DEFAULT_CONFIG, ACTION_LABELS)
+        except ValueError as exc:
+            messagebox.showerror("Settings need a change", str(exc), parent=root)
+            return
         if not config["on_insertion"] and not config["on_button_hold"]:
             if not messagebox.askyesno("No trigger selected", "Save anyway? The app will wait without running actions.",
                                        default=messagebox.NO, parent=root):
@@ -218,25 +232,9 @@ def setup_wizard():
 
 
 def validate(message):
-    if not isinstance(message, dict):
-        return False
-    if message.get("protocol") != PROTOCOL or message.get("version") != VERSION:
-        return False
-    event = message.get("event")
-    if event == "hello":
-        return True
-    if event == "released":
-        hold_ms = message.get("hold_ms")
-        return isinstance(hold_ms, int) and not isinstance(hold_ms, bool) and hold_ms >= 0
-    if event != "trigger":
-        return False
-    hold_ms = message.get("hold_ms")
-    event_id = message.get("event_id")
-    return (
-        isinstance(hold_ms, int) and not isinstance(hold_ms, bool)
-        and MIN_HOLD_MS <= hold_ms <= 60_000
-        and isinstance(event_id, str) and 1 <= len(event_id) <= 32
-        and event_id.isalnum()
+    return validate_message(
+        message, protocol=PROTOCOL, version=VERSION,
+        minimum_hold_ms=MIN_HOLD_MS, maximum_hold_ms=60_000,
     )
 
 
@@ -251,8 +249,8 @@ def ask_to_run(source, config):
         root = tk.Tk()
         root.withdraw()
         root.attributes("-topmost", True)
-        labels = [ACTION_LABELS.get(item["id"], item["id"])
-                  for item in sorted(config["actions"], key=lambda item: ACTION_ORDER.get(item["id"], 999))]
+        labels = [action_prompt_line(item, config)
+                  for item in ordered_actions(config["actions"], ACTION_ORDER)]
         details = "\n".join(f"• {label}" for label in labels)
         ok = messagebox.askyesno(
             "PanicStick confirmation",
@@ -265,6 +263,18 @@ def ask_to_run(source, config):
     except Exception as exc:
         logging.error("Could not show the confirmation window; actions cancelled: %s", exc)
         return False
+
+
+def action_prompt_line(action, config):
+    action_id = action["id"]
+    label = ACTION_LABELS.get(action_id, action_id)
+    if action_id == "quit_selected_apps":
+        return f"{label}: {', '.join(config.get('selected_apps', []))}"
+    if action_id == "quit_vm_apps":
+        return f"{label}: {', '.join(config.get('vm_apps', []))}"
+    if action_id == "run_shortcut":
+        return f"{label}: {config.get('shortcut_name', '')}"
+    return label
 
 
 def run_osascript(script, timeout=30):
@@ -317,9 +327,9 @@ def run_shortcut(config):
         raise RuntimeError("No Shortcut name is saved. Open PanicStick setup first.")
     if not shutil.which("shortcuts"):
         raise RuntimeError("The macOS shortcuts command was not found.")
-    result = subprocess.run(["shortcuts", "run", name], check=True,
-                            capture_output=True, text=True, timeout=300)
-    return result.stdout.strip() or "Shortcut completed."
+    subprocess.run(["shortcuts", "run", name], check=True,
+                   capture_output=True, text=True, timeout=300)
+    return "Shortcut completed."
 
 
 def disable_ssh():
@@ -388,12 +398,9 @@ def handle_trigger(source, message, config):
     if source == "button hold" and not config.get("on_button_hold", False):
         return
     event_id = message.get("event_id") or f"{source}-{time.time_ns()}"
-    if event_id in SEEN_TRIGGER_IDS:
+    if not SEEN_TRIGGER_IDS.add(event_id):
+        logging.info("Ignored a duplicate trigger event.")
         return
-    SEEN_TRIGGER_IDS.add(event_id)
-    if len(SEEN_TRIGGER_IDS) > 512:
-        SEEN_TRIGGER_IDS.clear()
-        SEEN_TRIGGER_IDS.add(event_id)
 
     if not ask_to_run(source, config):
         append_event({"timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -411,7 +418,7 @@ def handle_trigger(source, message, config):
     }
     append_event(record)
 
-    ordered = sorted(config["actions"], key=lambda item: ACTION_ORDER.get(item["id"], 999))
+    ordered = ordered_actions(config["actions"], ACTION_ORDER)
     for action in ordered:
         try:
             execute_action(action, config)
@@ -496,7 +503,7 @@ def main():
     parser.add_argument("--setup", action="store_true", help="open the visual setup screen")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_private_data_dir()
     if args.setup:
         try:
             setup_wizard()
