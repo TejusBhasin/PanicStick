@@ -28,6 +28,16 @@ class ArtworkTests(unittest.TestCase):
                 self.assertEqual(title.text, expected_title)
                 self.assertGreater(len(desc.text or ""), 20)
 
+    def test_every_svg_in_the_image_folder_is_well_formed(self):
+        ns = "{http://www.w3.org/2000/svg}"
+        for path in sorted(IMAGES.glob("*.svg")):
+            with self.subTest(filename=path.name):
+                root = ET.parse(path).getroot()
+                self.assertEqual(root.tag, ns + "svg")
+                self.assertEqual(root.attrib.get("role"), "img")
+                self.assertIsNotNone(root.find(ns + "title"))
+                self.assertIsNotNone(root.find(ns + "desc"))
+
     def test_readme_displays_the_four_artworks(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         for filename in EXPECTED:
