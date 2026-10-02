@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+<title id="title">PanicStick enclosure exploded view</title><desc id="desc">Flat technical illustration of the printable lid, Pico 2 board, button, and enclosure base as separate layers, with nominal overall case size.</desc>
+<defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#edf3fb"/></linearGradient><linearGradient id="shell" x2="0" y2="1"><stop stop-color="#7c8ba0"/><stop offset="1" stop-color="#53637a"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3 0 6Z" fill="#667c98"/></marker></defs>
+<rect width="1100" height="650" rx="30" fill="url(#bg)"/>
+<text x="56" y="75" fill="#17243a" font-family="Arial,sans-serif" font-size="32" font-weight="700">Printable case • parts shown separately</text>
+<text x="56" y="108" fill="#53677f" font-family="Arial,sans-serif" font-size="18">This is an assembly guide illustration; the exposed-board concept image is separate.</text>
+<g transform="translate(175,145)">
+<path d="M70 65h510l-52 48H125z" fill="#aab6c7" stroke="#53637a" stroke-width="4"/>
+<path d="M125 113h403v25H125z" fill="#7c8ba0" stroke="#53637a" stroke-width="4"/>
+<circle cx="143" cy="91" r="8" fill="#e9eef5"/><circle cx="511" cy="91" r="8" fill="#e9eef5"/>
+<path d="M126 154v45M526 154v45" stroke="#758ba4" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<rect x="130" y="220" width="394" height="116" rx="14" fill="#26765f" stroke="#164b43" stroke-width="4"/>
+<rect x="278" y="242" width="94" height="68" rx="5" fill="#303b49"/><text x="325" y="283" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="15" font-weight="700">Pico 2</text>
+<g fill="#e9f0ee"><circle cx="153" cy="228" r="5"/><circle cx="175" cy="228" r="5"/><circle cx="197" cy="228" r="5"/><circle cx="219" cy="228" r="5"/><circle cx="241" cy="228" r="5"/><circle cx="263" cy="228" r="5"/><circle cx="285" cy="228" r="5"/><circle cx="307" cy="228" r="5"/><circle cx="329" cy="228" r="5"/><circle cx="351" cy="228" r="5"/><circle cx="373" cy="228" r="5"/><circle cx="395" cy="228" r="5"/><circle cx="417" cy="228" r="5"/><circle cx="439" cy="228" r="5"/><circle cx="461" cy="228" r="5"/><circle cx="483" cy="228" r="5"/><circle cx="505" cy="228" r="5"/></g>
+<path d="M126 358v46M526 358v46" stroke="#758ba4" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<path d="M97 420h462v30H97zM113 450v105h430V450" fill="url(#shell)" stroke="#39495e" stroke-width="5"/>
+<path d="M132 464h392v74H132z" fill="#eaf0f5" stroke="#8898ab" stroke-width="3"/>
+<path d="M120 481h-18v34h18" fill="#b7c5d4" stroke="#53637a" stroke-width="3"/>
+<circle cx="325" cy="465" r="14" fill="#e9aa45" stroke="#72511e" stroke-width="3"/>
+<path d="M297 420v-27M353 420v-27" stroke="#758ba4" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<rect x="690" y="165" width="270" height="150" rx="18" fill="#fff" stroke="#d0d9e5" stroke-width="2"/>
+<text x="720" y="205" fill="#243a55" font-family="Arial,sans-serif" font-size="20" font-weight="700">Lid</text><text x="720" y="235" fill="#53677f" font-family="Arial,sans-serif" font-size="17">Button opening and guard</text><text x="720" y="263" fill="#53677f" font-family="Arial,sans-serif" font-size="17">M2 screw holes • LED opening</text>
+<rect x="690" y="327" width="270" height="100" rx="18" fill="#fff" stroke="#d0d9e5" stroke-width="2"/>
+<text x="720" y="367" fill="#243a55" font-family="Arial,sans-serif" font-size="20" font-weight="700">Board</text><text x="720" y="398" fill="#53677f" font-family="Arial,sans-serif" font-size="17">Pico 2 with GP14 button wiring</text>
+<rect x="690" y="440" width="270" height="110" rx="18" fill="#fff" stroke="#d0d9e5" stroke-width="2"/>
+<text x="720" y="480" fill="#243a55" font-family="Arial,sans-serif" font-size="20" font-weight="700">Base</text><text x="720" y="510" fill="#53677f" font-family="Arial,sans-serif" font-size="17">USB opening and support rails</text><text x="720" y="536" fill="#53677f" font-family="Arial,sans-serif" font-size="17">62 × 31 × 16.4 mm assembled</text>
+</g>
+<g font-family="Arial,sans-serif"><rect x="690" y="565" width="270" height="54" rx="14" fill="#fff2df" stroke="#e1ad62" stroke-width="2"/><text x="825" y="588" text-anchor="middle" fill="#63410f" font-size="14" font-weight="700">Mac workflow: review or unattended</text><text x="825" y="608" text-anchor="middle" fill="#806238" font-size="13">The case and button are unchanged</text></g>

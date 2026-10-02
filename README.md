@@ -18,6 +18,8 @@ The Pico sends a small JSON message over USB. The Mac app checks the message and
 
 ![Labeled PanicStick response flow](docs/images/response-flow.svg)
 
+See the [unattended response flow](docs/images/response-flow-unattended.svg), [unattended setup flow](docs/images/setup-flow-unattended.svg), and [confirmation checkpoints](docs/images/confirmation-checkpoints.svg).
+
 The Mac runs a Shortcut first, then connectivity and app actions, and shutdown last. A second confirmation appears before shutdown. If an action fails, the rest of the sequence stops. Events are recorded on your Mac.
 
 ## What you can choose
@@ -45,7 +47,7 @@ See the [wiring diagram](docs/button-wiring.svg), [case dimensions](cad/panicsti
 - `docs/testing.md`: hardware and Mac test checklist.
 - `tests/`: automated protocol, settings, action-order, button, and artwork checks.
 
-Read the [confirmation and takeover warning](docs/confirmation-and-security.md). See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
+Read the [confirmation and takeover warning](docs/confirmation-and-security.md). The [image bundle](docs/images/PanicStick-diagrams.zip) contains both original and new diagrams. See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
 
 ## Open source
 

@@ -52,6 +52,10 @@ If macOS blocks the installer, Control-click `install.command`, choose **Open**,
 
 ![Safe first-test flow](images/setup-flow.svg)
 
+![Unattended setup option](images/setup-flow-unattended.svg)
+
+![Takeover warning](images/takeover-warning.svg)
+
 ## Part 4: test safely
 
 1. In setup, choose notification-only.
