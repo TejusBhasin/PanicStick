@@ -4,12 +4,16 @@ Use a non-critical Mac account and save open work before testing. First test wit
 
 ## Firmware bench check
 
-1. Install Pico 2 MicroPython and copy pico/main.py onto the board as main.py.
+1. Install Pico 2 MicroPython. In Thonny, copy pico/button_monitor.py onto the board as button_monitor.py, then copy pico/main.py as main.py.
 2. Open the serial REPL. Confirm one hello JSON line appears.
 3. Connect GP14 to GND briefly. Confirm no trigger line appears.
 4. Hold GP14 to GND continuously for at least two seconds. Confirm exactly one trigger line with hold_ms >= 2000.
 5. Keep holding. Confirm no second trigger appears.
 6. Release, then hold again for two seconds. Confirm one new trigger appears.
+
+## Automated checks
+
+From the repository folder, run `python3 -m unittest discover -v` and `python3 -m compileall -q mac pico tests`. On a Mac, also run `bash -n mac/install.command mac/uninstall.command`. The GitHub Actions workflow runs these checks on macOS and Ubuntu and keeps the test output in its run summary and downloadable artifact. These automated checks do not replace the physical Pico and Mac steps below.
 
 ## Mac setup and insertion check
 
