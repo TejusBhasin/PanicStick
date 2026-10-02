@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" role="img" aria-labelledby="title desc">
+<title id="title">PanicStick response flow</title><desc id="desc">Labeled flow from physical button or optional USB insertion, through Mac confirmation, then shortcut, connectivity and app actions, local log, and shutdown last.</desc>
+<defs><linearGradient id="b" x2="0" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#edf3fb"/></linearGradient><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3 0 6Z" fill="#55708e"/></marker></defs>
+<rect width="1100" height="700" rx="30" fill="url(#b)"/>
+<text x="56" y="70" fill="#17243a" font-family="Arial,sans-serif" font-size="32" font-weight="700">What happens when PanicStick is triggered?</text>
+<rect x="62" y="118" width="255" height="82" rx="18" fill="#e2f2ed" stroke="#6aa68f" stroke-width="3"/><text x="189" y="153" text-anchor="middle" fill="#1b473d" font-family="Arial,sans-serif" font-size="20" font-weight="700">Hold the button</text><text x="189" y="180" text-anchor="middle" fill="#42685f" font-family="Arial,sans-serif" font-size="16">2 seconds • intentional</text>
+<rect x="62" y="225" width="255" height="82" rx="18" fill="#fff2df" stroke="#e1ad62" stroke-width="3"/><text x="189" y="260" text-anchor="middle" fill="#63410f" font-family="Arial,sans-serif" font-size="20" font-weight="700">Or plug in the Pico</text><text x="189" y="287" text-anchor="middle" fill="#806238" font-family="Arial,sans-serif" font-size="16">optional trigger in setup</text>
+<path d="M317 160 C360 160 355 197 400 197M317 266 C360 266 355 197 400 197" fill="none" stroke="#55708e" stroke-width="4" marker-end="url(#a)"/>
+<rect x="405" y="151" width="268" height="96" rx="18" fill="#e9eaff" stroke="#9294d8" stroke-width="3"/><text x="539" y="189" text-anchor="middle" fill="#33325e" font-family="Arial,sans-serif" font-size="20" font-weight="700">Review on the Mac</text><text x="539" y="219" text-anchor="middle" fill="#5a5b83" font-family="Arial,sans-serif" font-size="16">See the selected actions</text>
+<path d="M673 198h60" fill="none" stroke="#55708e" stroke-width="4" marker-end="url(#a)"/>
+<rect x="740" y="151" width="295" height="96" rx="18" fill="#fff" stroke="#8fa2b8" stroke-width="3"/><text x="887" y="189" text-anchor="middle" fill="#17243a" font-family="Arial,sans-serif" font-size="20" font-weight="700">Choose Run or Cancel</text><text x="887" y="219" text-anchor="middle" fill="#53677f" font-family="Arial,sans-serif" font-size="16">Default button is Cancel</text>
+<path d="M889 247v55" fill="none" stroke="#55708e" stroke-width="4" marker-end="url(#a)"/>
+<rect x="740" y="311" width="295" height="75" rx="18" fill="#e7f3ff" stroke="#78a9d5" stroke-width="3"/><text x="887" y="357" text-anchor="middle" fill="#1d4b72" font-family="Arial,sans-serif" font-size="20" font-weight="700">Run the chosen sequence</text>
+<path d="M740 349H674" fill="none" stroke="#55708e" stroke-width="4" marker-end="url(#a)"/>
+<g font-family="Arial,sans-serif" text-anchor="middle">
+<rect x="432" y="303" width="230" height="58" rx="14" fill="#e2f2ed" stroke="#6aa68f" stroke-width="2"/><text x="547" y="339" fill="#1b473d" font-size="18" font-weight="700">1  Your Shortcut</text>
+<rect x="432" y="378" width="230" height="58" rx="14" fill="#e7f3ff" stroke="#78a9d5" stroke-width="2"/><text x="547" y="414" fill="#1d4b72" font-size="18" font-weight="700">2  Connectivity settings</text>
+<rect x="432" y="453" width="230" height="58" rx="14" fill="#fff2df" stroke="#e1ad62" stroke-width="2"/><text x="547" y="489" fill="#63410f" font-size="18" font-weight="700">3  Selected app actions</text>
+<rect x="432" y="528" width="230" height="58" rx="14" fill="#ffe7e8" stroke="#db7e85" stroke-width="2"/><text x="547" y="564" fill="#762a32" font-size="18" font-weight="700">4  Shutdown, if selected</text>
+</g>
+<path d="M317 267v329h94" fill="none" stroke="#bf7180" stroke-width="3" stroke-dasharray="7 7" marker-end="url(#a)"/>
+<rect x="62" y="551" width="255" height="78" rx="16" fill="#fff" stroke="#d0d9e5" stroke-width="2"/><text x="189" y="582" text-anchor="middle" fill="#243a55" font-family="Arial,sans-serif" font-size="18" font-weight="700">Cancel = no actions run</text><text x="189" y="608" text-anchor="middle" fill="#53677f" font-family="Arial,sans-serif" font-size="15">USB arrival alone never runs them</text>
+<path d="M317 589h94" fill="none" stroke="#55708e" stroke-width="3" marker-end="url(#a)"/>
+<rect x="740" y="418" width="295" height="65" rx="16" fill="#fff" stroke="#d0d9e5" stroke-width="2"/><text x="887" y="446" text-anchor="middle" fill="#243a55" font-family="Arial,sans-serif" font-size="17" font-weight="700">A failure stops what follows</text><text x="887" y="468" text-anchor="middle" fill="#53677f" font-family="Arial,sans-serif" font-size="15">Result is added to the local log</text>
+<text x="740" y="540" fill="#53677f" font-family="Arial,sans-serif" font-size="15">Shutdown gets a second confirmation</text><text x="740" y="566" fill="#53677f" font-family="Arial,sans-serif" font-size="15">and always runs last.</text>
+</svg>
