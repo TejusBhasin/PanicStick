@@ -518,9 +518,9 @@ def doctor():
         ("blueutil for Bluetooth action", bool(shutil.which("blueutil"))),
     ]
     for label, ready in required:
-        print(f"{"OK" if ready else "MISSING"}  {label}")
+        print("{}  {}".format("OK" if ready else "MISSING", label))
     for label, ready in optional:
-        print(f"{"OK" if ready else "OPTIONAL"}  {label}")
+        print("{}  {}".format("OK" if ready else "OPTIONAL", label))
     return 0 if all(ready for _, ready in required) else 1
 
 
