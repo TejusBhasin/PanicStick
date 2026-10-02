@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+<title id="title">PanicStick confirmation checkpoints through the workflow</title>
+<desc id="desc">Two-dimensional workflow illustration showing the start review, optional confirmation checkpoints before selected actions, and shutdown last.</desc>
+<defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#edf3fb"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3 0 6Z" fill="#55708e"/></marker></defs>
+<rect width="1100" height="650" rx="30" fill="url(#bg)"/>
+<g font-family="Arial,sans-serif">
+<text x="550" y="65" text-anchor="middle" fill="#17243a" font-size="30" font-weight="700">Place confirmation pauses along the action path</text>
+<rect x="55" y="145" width="190" height="100" rx="18" fill="#e2f2ed" stroke="#6aa68f" stroke-width="3"/><text x="150" y="186" text-anchor="middle" fill="#1b473d" font-size="21" font-weight="700">Trigger</text><text x="150" y="218" text-anchor="middle" fill="#42685f" font-size="16">insert / button</text>
+<path d="M245 195h35" stroke="#55708e" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="290" y="145" width="205" height="100" rx="18" fill="#e9eaff" stroke="#9294d8" stroke-width="3"/><text x="392" y="186" text-anchor="middle" fill="#33325e" font-size="19" font-weight="700">Start review</text><text x="392" y="218" text-anchor="middle" fill="#5a5b83" font-size="15">optional in unattended</text>
+<path d="M495 195h35" stroke="#55708e" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="540" y="145" width="165" height="100" rx="18" fill="#e2f2ed" stroke="#6aa68f" stroke-width="3"/><text x="622" y="186" text-anchor="middle" fill="#1b473d" font-size="20" font-weight="700">Shortcut</text><text x="622" y="218" text-anchor="middle" fill="#42685f" font-size="15">if selected</text>
+<path d="M705 195h35" stroke="#55708e" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="750" y="145" width="165" height="100" rx="18" fill="#e7f3ff" stroke="#78a9d5" stroke-width="3"/><text x="832" y="186" text-anchor="middle" fill="#1d4b72" font-size="20" font-weight="700">System</text><text x="832" y="218" text-anchor="middle" fill="#53677f" font-size="15">network / apps</text>
+<path d="M915 195h30" stroke="#55708e" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="950" y="145" width="120" height="100" rx="18" fill="#ffe7e8" stroke="#db7e85" stroke-width="3"/><text x="1010" y="186" text-anchor="middle" fill="#762a32" font-size="18" font-weight="700">Power off</text><text x="1010" y="218" text-anchor="middle" fill="#762a32" font-size="15">last</text>
+<rect x="545" y="300" width="155" height="76" rx="16" fill="#fff2df" stroke="#e1ad62" stroke-width="3"/><text x="622" y="333" text-anchor="middle" fill="#63410f" font-size="18" font-weight="700">Checkpoint</text><text x="622" y="358" text-anchor="middle" fill="#806238" font-size="14">before Shortcut</text>
+<rect x="755" y="300" width="155" height="76" rx="16" fill="#fff2df" stroke="#e1ad62" stroke-width="3"/><text x="832" y="333" text-anchor="middle" fill="#63410f" font-size="18" font-weight="700">Checkpoint</text><text x="832" y="358" text-anchor="middle" fill="#806238" font-size="14">before system action</text>
+<rect x="933" y="300" width="155" height="76" rx="16" fill="#fff2df" stroke="#e1ad62" stroke-width="3"/><text x="1010" y="333" text-anchor="middle" fill="#63410f" font-size="18" font-weight="700">Checkpoint</text><text x="1010" y="358" text-anchor="middle" fill="#806238" font-size="14">default for shutdown</text>
+<path d="M622 245v48M832 245v48M1010 245v48" stroke="#b07b2f" stroke-width="3" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+<rect x="165" y="440" width="770" height="95" rx="18" fill="#fff" stroke="#c8d7e8" stroke-width="2"/><text x="550" y="480" text-anchor="middle" fill="#17243a" font-size="20" font-weight="700">Choose No at a checkpoint → later steps stop</text><text x="550" y="512" text-anchor="middle" fill="#53677f" font-size="17">Already completed actions remain completed.</text>
+<rect x="180" y="565" width="740" height="52" rx="14" fill="#fff2df" stroke="#e1ad62" stroke-width="2"/><text x="550" y="598" text-anchor="middle" fill="#63410f" font-size="16" font-weight="600">Prompts may be blocked or changed if the Mac is completely taken over.</text>
+</g></svg>
