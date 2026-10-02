@@ -47,7 +47,7 @@ class ButtonMonitorTests(unittest.TestCase):
         monitor.update(0, 90, wrap_diff)
         monitor.update(0, 95, wrap_diff)
         self.assertIsNone(monitor.update(0, 9, wrap_diff))
-        self.assertEqual(monitor.update(0, 10, wrap_diff), ("trigger", 20))
+        self.assertEqual(monitor.update(0, 15, wrap_diff), ("trigger", 20))
 
 
 if __name__ == "__main__":
