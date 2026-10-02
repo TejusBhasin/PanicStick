@@ -1,48 +1,54 @@
 # PanicStick
 
-A physical emergency-response button accessory built around a Raspberry Pi Pico 2 (non-W) and a macOS companion.
+**A button for starting a Mac emergency-response routine you chose.**
 
-When the Pico is inserted, the Mac can show the configured action list and ask before running it. A two-second hold of the physical button is an optional second trigger. **USB insertion never silently runs actions:** the user must click **Run** in the Mac confirmation window. Notification-only is the safest first setup.
+PanicStick pairs a Raspberry Pi Pico 2 (the non-W model) with a small Mac app. You can ask the app to show a review screen when the Pico is plugged in, or trigger it by holding the physical button for two seconds.
 
-> Prototype warning: some optional choices can close apps, disconnect the Mac, or shut it down. Save your work and test notification-only first.
+![Bare Pico 2 board with a separate PanicStick button](docs/images/pico2-and-button.svg)
+
+> **This is a prototype.** Some choices can close apps, disconnect your Mac, or shut it down. Begin with notifications only and save your work before trying anything else.
 
 ## Start here
 
-If you are new to coding or hardware, follow the step-by-step [Beginner Install Guide](docs/install-for-beginners.md). It includes setup, testing, and recovery steps.
+New to coding or electronics? Follow the [step-by-step beginner guide](docs/install-for-beginners.md). You can test PanicStick on your desk without printing the case.
 
-## What's included
+## How it works
 
-- `pico/main.py`: MicroPython firmware for Pico 2.
-- `mac/panicstick.py`: setup window, USB arrival monitor, confirmations, actions, and event log.
-- `mac/install.command` / `mac/uninstall.command`: per-user Mac login helper installer and remover.
-- `cad/panicstick_case.scad`: editable OpenSCAD enclosure design.
-- `cad/printable/panicstick_base.stl` and `panicstick_lid.stl`: separate print-ready parts.
-- `cad/fit_gauge.scad`: optional printer-clearance coupon.
-- `cad/panicstick-dimensions.svg`: flat 2D case drawing, with no perspective or 3D rendering.
-- `docs/cad-printing.md`: beginner printing and assembly guide; `docs/button-wiring.svg`: GP14 wiring picture.
-- `docs/protocol.md`: USB protocol; `docs/testing.md`: bench and end-to-end checklist.
+The Pico sends a small JSON message over USB. The Mac app checks it, shows you the actions you selected, and waits for you to choose **Run** or **Cancel**. Plugging in the Pico never runs actions silently.
 
-## Actions
+![Labeled PanicStick response flow](docs/images/response-flow.svg)
 
-The setup window lets you choose notifications, quit all apps or selected apps, Wi-Fi, Bluetooth (optional blueutil), incoming SSH/Remote Login, manual Sharing settings, named virtual-machine apps, a named Shortcuts app shortcut, Terminal, and power off.
+The Mac runs a Shortcut first, then connectivity and app actions, and shutdown last. A second confirmation appears before shutdown. If an action fails, the rest of the sequence stops. Events are recorded on your Mac.
 
-Each triggered sequence asks the user to confirm. Shortcuts run before connectivity changes or apps close. Shutdown runs last and gets its own second confirmation. Screen Sharing and headless virtual machines require manual steps or a user-authored Shortcut. If an action fails, later actions are skipped.
+## What you can choose
 
-## Hardware
+The setup screen includes notification, quit selected apps, quit all apps, turn off Wi-Fi, turn off Bluetooth with the optional `blueutil` utility, turn off incoming SSH/Remote Login, open Sharing settings for you to change manually, quit selected virtual-machine apps, run one of your Shortcuts, quit Terminal, and shut down the Mac.
 
-- Raspberry Pi Pico 2 (non-W)
-- Normally-open momentary switch between GP14 and GND
-- USB Micro-B data cable to connect the Pico to the Mac
-- Optional printed enclosure, four M2 × 8 mm screws
+Some choices have limits: PanicStick cannot guarantee that a headless virtual machine has stopped, and it opens Sharing settings rather than changing Screen Sharing for you. Read the [action details](docs/actions.md) before enabling anything disruptive.
 
-Do not connect the button to 3V3. The onboard pull-up is used. The enclosure is nominally 62 × 31 × 16.4 mm including the raised button guard. Its opening fits the Pico's Micro-USB-B connector; use a data-capable cable, not a charge-only cable. See the [flat 2D dimension drawing](cad/panicstick-dimensions.svg) and [print guide](docs/cad-printing.md).
+## Build it
 
-## Open source and distribution
+You’ll need a Pico 2 (non-W), a normally-open momentary button, two short wires, and a Micro-USB-B data cable. Connect the button between GP14 and GND. Do not connect the button to 3V3.
 
-The entire project is openly available under the MIT License (see [LICENSE](LICENSE)). You can browse, download, modify, and fork the code and CAD files.
+The enclosure is optional. The editable [OpenSCAD model](cad/panicstick_case.scad) and print-ready [base](cad/printable/panicstick_base.stl) and [lid](cad/printable/panicstick_lid.stl) are in the repository.
 
-You do not need a package or release while developing or testing. A GitHub ZIP and the installer are enough for early testers. A tagged GitHub release is useful when you want to pin a stable version; a signed and notarized macOS app/package is a later convenience, not required to run the current prototype.
+![Exploded illustration of the printable case](docs/images/case-exploded.svg)
 
-## Development
+See the [wiring diagram](docs/button-wiring.svg), [case dimensions](cad/panicstick-dimensions.svg), and [printing and assembly guide](docs/cad-printing.md).
 
-Read the [USB protocol](docs/protocol.md), [testing checklist](docs/testing.md), and [case printing guide](docs/cad-printing.md). Start with notification-only mode and confirm the full insert → review → Run/Cancel flow on your own Mac.
+## Try the code
+
+- `pico/main.py` and `pico/button_monitor.py`: Pico 2 MicroPython firmware.
+- `mac/panicstick.py` and `mac/panicstick_core.py`: Mac setup, USB monitoring, confirmation, and actions.
+- `mac/install.command` and `mac/uninstall.command`: per-user setup and removal.
+- `docs/protocol.md`: USB message format.
+- `docs/testing.md`: hardware and Mac test checklist.
+- `tests/`: automated protocol, settings, action-order, button, and artwork checks.
+
+See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac.
+
+## Open source
+
+PanicStick is open source under the [MIT License](LICENSE). Browse, download, change, and share the code and design files.
+
+You don’t need a package to try a prototype. A repository ZIP is enough. A tagged GitHub release will help when a version is ready for others to use; a signed Mac installer can come later.
