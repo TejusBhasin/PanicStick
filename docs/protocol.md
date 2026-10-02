@@ -1,8 +1,8 @@
 # PanicStick USB protocol v1
 
-The Pico sends UTF-8 JSON lines over USB CDC serial at 115200 baud. Each message ends with LF. The Mac companion ignores malformed, oversized, unsupported-version, and unknown-event messages.
+The Pico 2 sends one UTF-8 JSON object per line over USB CDC serial at 115200 baud. Each line ends with LF. The Mac ignores malformed, oversized, unsupported-version, and unknown-event messages.
 
-USB connection is a separate host-side trigger configured in the Mac app. The firmware's startup hello is informational; it is never treated as a button press.
+USB connection is a separate host-side trigger controlled by the user's setup. The Pico's startup hello is informational; it is never treated as a button press. The Mac still displays a confirmation before running a configured action list.
 
 ## Device messages
 
@@ -18,14 +18,24 @@ On release after a trigger:
 
     {"protocol":"panicstick","version":1,"event":"released","hold_ms":2531}
 
-The firmware emits at most one trigger per press. A debounced release rearms the button. Event IDs are used to ignore duplicate trigger lines during a connection.
+## Validation rules
+
+- Protocol name and version must match exactly.
+- A trigger hold must be an integer from 2000 through 60000 ms. Booleans are not accepted as integers.
+- A trigger event ID must be 1–32 ASCII letters, digits, underscores, or hyphens.
+- A hello device name is limited to 64 characters; firmware label to 32; button GPIO to 0–29.
+- A release message must have a non-negative integer hold time.
+- The USB listener reads at most 4096 bytes per line.
+- Trigger IDs are held in a bounded FIFO cache, so repeats are ignored without allowing unbounded memory growth.
+
+The firmware emits only one trigger per press. A debounced release rearms the button. The Mac host assigns its own event ID to an insertion event; it does not accept a USB hello as a trigger.
 
 ## Electrical behavior
 
-GP14 uses the internal pull-up; wire a normally-open button between GP14 and GND. Pressed reads LOW. Firmware debounces for 35 ms and requires a two-second hold.
+GP14 uses the internal pull-up. Connect a normally-open momentary button between GP14 and GND; pressed reads LOW. The firmware debounces for 35 ms and requires a two-second hold. It continues polling while its LED gives feedback.
 
 ## Host behavior
 
-The Mac companion can act on either a newly detected USB connection or a button-hold message, depending on the user's setup. A connection is matched using Pico/RP2 USB identification hints. At app startup, devices already attached are not treated as new insertions; unplug and reconnect to create a fresh arrival event.
+The Mac companion identifies Pico/RP2 serial devices. At app startup, already-connected devices are not treated as fresh insertion events; unplug and reconnect to create a new arrival event.
 
-For every configured action except a plain notification, the companion presents the action list and requires an affirmative confirmation. The power-off action asks a second time and is ordered last. If a step fails, later steps are skipped. The event log is stored locally in JSON Lines format.
+The action review defaults to Cancel. The selected Shortcut runs before connectivity changes and app quitting. Shutdown requires a second confirmation and always runs last. A failed action stops the remaining sequence. The companion stores its JSON Lines event log locally in the user's PanicStick support folder.
