@@ -29,21 +29,28 @@ def emit(event, **fields):
 emit("hello", device="Pico 2", firmware="1.0.0", button_gpio=BUTTON_GPIO)
 
 monitor = ButtonMonitor(hold_ms=HOLD_MS, debounce_ms=DEBOUNCE_MS)
+blink_until = None
+blink_next = None
+blink_on = False
+
 while True:
-    event = monitor.update(button.value(), time.ticks_ms(), time.ticks_diff)
+    now = time.ticks_ms()
+    event = monitor.update(button.value(), now, time.ticks_diff)
     if event and event[0] == "trigger":
-        held_ms = event[1]
-        event_id = str(time.ticks_us())
-        emit("trigger", hold_ms=held_ms, event_id=event_id)
-        for _ in range(3):
-            led.value(0)
-            time.sleep_ms(80)
-            led.value(1)
-            time.sleep_ms(80)
-        led.value(1)
+        emit("trigger", hold_ms=event[1], event_id=str(time.ticks_us()))
+        blink_until = time.ticks_add(now, 480)
+        blink_next = now
+        blink_on = False
     elif event and event[0] == "released":
-        led.value(0)
         emit("released", hold_ms=event[1])
-    elif monitor.pressed:
-        led.value(1)
+
+    if blink_until is not None and time.ticks_diff(now, blink_until) < 0:
+        if time.ticks_diff(now, blink_next) >= 0:
+            blink_on = not blink_on
+            led.value(1 if blink_on else 0)
+            blink_next = time.ticks_add(now, 80)
+    else:
+        blink_until = None
+        led.value(1 if monitor.pressed else 0)
+
     time.sleep_ms(5)
