@@ -10,7 +10,7 @@ PanicStick pairs a Raspberry Pi Pico 2 (the non-W model) with a small Mac app. Y
 
 ## Start here
 
-New to coding or electronics? Follow the [step-by-step beginner guide](docs/install-for-beginners.md). You can test PanicStick on your desk without printing the case.
+New to coding or electronics? Follow the [step-by-step beginner guide](docs/install-for-beginners.md). You can test PanicStick on your desk without printing the case.\n\n![Four-step PanicStick setup guide](docs/images/setup-flow.svg)
 
 ## How it works
 
@@ -45,7 +45,7 @@ See the [wiring diagram](docs/button-wiring.svg), [case dimensions](cad/panicsti
 - `docs/testing.md`: hardware and Mac test checklist.
 - `tests/`: automated protocol, settings, action-order, button, and artwork checks.
 
-See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac.
+See [how to run the tests](docs/testing.md). Hardware checks still need a Pico and a Mac. On your Mac, run `panicstick.py --doctor` for a read-only setup check or `panicstick.py --show-log` to view the latest local event records.
 
 ## Open source
 
