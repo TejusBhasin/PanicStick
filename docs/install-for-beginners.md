@@ -20,11 +20,13 @@ PanicStick is a prototype. Start with notification-only mode. Save your work bef
 3. Unplug the Pico. Hold its small **BOOTSEL** button while connecting it to the Mac. A drive named **RPI-RP2** should appear in Finder.
 4. Copy the downloaded UF2 firmware file onto **RPI-RP2**. The Pico restarts and the drive disappears. This is expected.
 5. In Thonny, choose the **Raspberry Pi Pico 2** interpreter.
-6. Open `pico/main.py` from the PanicStick folder.
-7. Choose **File → Save as… → Raspberry Pi Pico**, name it `main.py`, then click the green **Run** button.
-8. The shell should show a line with `hello`.
+6. In Thonny, open `pico/button_monitor.py` and choose **File → Save as… → Raspberry Pi Pico**. Save it as `button_monitor.py`.
+7. Open `pico/main.py` and save it to the Pico as `main.py`.
+8. Click the green **Run** button. The shell should show a line with `hello`.
 
 If Finder does not show RPI-RP2, try a different data cable. Some cables provide power only.
+
+![Pico 2 board and external button](images/pico2-and-button.svg)
 
 ## Part 2: connect the button
 
@@ -48,6 +50,8 @@ Unplug the Pico before wiring.
 
 If macOS blocks the installer, Control-click `install.command`, choose **Open**, then choose **Open** again. Only do this for a copy from the official repository that you have reviewed.
 
+![Safe first-test flow](images/setup-flow.svg)
+
 ## Part 4: test safely
 
 1. In setup, choose notification-only.
@@ -60,7 +64,7 @@ The Mac asks for confirmation every time. Insertion by itself does not run the a
 
 ## Optional: print the case
 
-Follow [the picture-free print guide](cad-printing.md) from the repository's `docs` folder. Download the two STL parts, print the base and lid separately, and test the fit with the Pico unpowered before wiring it into the case. The opening is for the Pico's Micro-USB-B connector; it is not a USB-A plug. A 3D printer is optional—the device can be tested on a nonconductive surface without the enclosure.
+Follow [the case printing guide](cad-printing.md) from the repository's `docs` folder. Download the two STL parts, print the base and lid separately, and test the fit with the Pico unpowered before wiring it into the case. The opening is for the Pico's Micro-USB-B connector; it is not a USB-A plug. A 3D printer is optional—the device can be tested on a nonconductive surface without the enclosure.
 
 ## Change or remove settings
 
