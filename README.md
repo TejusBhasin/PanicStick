@@ -20,7 +20,7 @@ The Pico sends a small JSON message over USB. The Mac app checks the message and
 
 See the [unattended response flow](docs/images/response-flow-unattended.svg), [unattended setup flow](docs/images/setup-flow-unattended.svg), and [confirmation checkpoints](docs/images/confirmation-checkpoints.svg).
 
-The Mac runs a Shortcut first, then connectivity and app actions, and shutdown last. A second confirmation appears before shutdown. If an action fails, the rest of the sequence stops. Events are recorded on your Mac.
+The Mac runs the Shortcut before connectivity and app actions, and shutdown last. You can place confirmation checkpoints before selected actions; the shutdown checkpoint starts selected when shutdown is enabled. If an action fails, the rest of the sequence stops. Events are recorded on your Mac.
 
 ## What you can choose
 

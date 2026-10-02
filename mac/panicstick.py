@@ -181,6 +181,16 @@ def setup_wizard():
         if action_id in config.get("confirm_before", []):
             checkpoints.selection_set(len(checkpoint_ids) - 1)
 
+    def sync_shutdown_checkpoint(*_):
+        index = checkpoint_ids.index("power_off")
+        if choices["power_off"].get():
+            checkpoints.selection_set(index)
+        else:
+            checkpoints.selection_clear(index)
+
+    choices["power_off"].trace_add("write", sync_shutdown_checkpoint)
+    sync_shutdown_checkpoint()
+
     tk.Label(root, text="App names for the two app choices (comma-separated; for example Safari, Mail):",
              anchor="w", wraplength=650).grid(row=row, column=0, sticky="ew", padx=24, pady=(12, 2))
     app_entry = tk.Entry(root)
